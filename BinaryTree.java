@@ -74,8 +74,39 @@ public class BinaryTree {
      * Duplicate values are allowed in a general binary tree.
      */
     public void add(int value) {
-        // TODO
-        throw new UnsupportedOperationException("TODO: BinaryTree.add");
+        Node x = new Node(value);
+
+        if (root == null) 
+        {
+            root = x;
+            return;
+        }
+
+        Queue<Node> queue = new ArrayDeque<>();
+        queue.add(root);
+
+        while (!queue.isEmpty())
+        {
+            Node y = queue.remove();
+
+            if(y.getLeft() == null)
+            {
+                y.setLeft(x);
+                return;
+            }
+
+            if(y.getRight() == null)
+            {
+                y.setRight(x);
+                return;
+            }
+            
+            else
+            {
+                queue.add(y.getLeft());
+                queue.add(y.getRight());
+            }
+        }
     }
 
     /**
@@ -86,17 +117,45 @@ public class BinaryTree {
      * @return the node containing value, or null if no such node exists
      *         (including when the tree is empty).
      */
-    public Node search(int value) {
-        // TODO
-        throw new UnsupportedOperationException("TODO: BinaryTree.search");
+
+    private Node search(int value, Node node)
+    {
+        if (node == null) 
+        {
+            return null;
+        }
+
+        if (node.getElement() == value) 
+        {
+            return node;
+        }
+
+        Node found = search(value, node.getLeft());
+
+        if (found !=null) 
+        {
+            return found;
+        }
+
+        return search(value, node.getRight());
     }
+
+    public Node search(int value) {
+
+        return search(value, root);
+    }
+
+    
 
     /*
      * Exercise 1, Part C — Complexity of search (n = number of nodes)
      *
-     * Best case:
+     * Best case: O(1)
+     *      The vlaue is at the root. Since search follows the preorder pattern
+     *      as it checks node.getElement() == value before ever visiting the children.
+     *      So it will return after 1 comparison, regardless of what n is.
      *
-     * Worst case:
+     * Worst case: O(n)
      *
      * Input that produces the worst case:
      *
